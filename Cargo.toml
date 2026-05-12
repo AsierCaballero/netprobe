@@ -1,0 +1,10 @@
+[package]
+name = "netprobe"
+version = "0.1.0"
+edition = "2024"
+description = "Multi-target network probing TUI"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
