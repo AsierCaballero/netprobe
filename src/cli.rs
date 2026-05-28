@@ -8,4 +8,8 @@ pub struct Cli {
     pub port: u16,
     #[arg(short = 'n', long, default_value_t = 3)]
     pub count: u32,
+    #[arg(short = 'i', long, default_value_t = 2.0)]
+    pub interval: f64,
+    #[arg(long)]
+    pub json: bool,
 }
