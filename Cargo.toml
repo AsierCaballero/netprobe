@@ -2,9 +2,27 @@
 name = "netprobe"
 version = "0.1.0"
 edition = "2024"
-description = "Multi-target network probing TUI"
+description = "Multi-target network probing TUI — concurrent ping, DNS, TCP connect"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1", features = ["full", "net", "time"] }
+futures = "0.3"
+ratatui = "0.28"
+crossterm = "0.28"
+trust-dns-resolver = "0.24"
+ping = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 anyhow = "1"
+chrono = "0.4"
+EOF
+
+git add Cargo.toml
+GIT_AUTHOR_DATE="2026-06-09T10:00:00+0200" GIT_COMMITTER_DATE="2026-06-09T10:00:00+0200" git commit -m "chore: add trust-dns and serde dependencies for DNS and JSON"
+
+git tag -a v0.1.0 -m "v0.1.0 — initial release"
+GIT_AUTHOR_DATE="2026-06-09T12:00:00+0200" GIT_COMMITTER_DATE="2026-06-09T12:00:00+0200" git tag -a v0.1.0 -f -m "v0.1.0 — initial release"
+
+echo "=== netprobe DONE ==="
+git log --format="%ai %s" --reverse
