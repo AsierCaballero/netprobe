@@ -4,24 +4,26 @@ mod prober;
 mod types;
 mod ui;
 
-use clap::Parser;
-use crossterm::execute;
-use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
-use ratatui::{backend::CrosstermBackend, Terminal};
 use crate::app::App;
 use crate::cli::Cli;
+use clap::Parser;
+use crossterm::execute;
+use crossterm::terminal::{EnterAlternateScreen, enable_raw_mode};
+use ratatui::{Terminal, backend::CrosstermBackend};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
     let targets = if cli.targets.is_empty() {
         vec!["8.8.8.8".into(), "1.1.1.1".into()]
-    } else { cli.targets };
+    } else {
+        cli.targets
+    };
 
     if cli.json {
         let mut results = Vec::new();
         for t in &targets {
-            results.push(prober::Prober::probe(t, cli.port, cli.count).await);
+            results.push(prober::Prober::probe(t, cli.port, cli.count, 5).await);
         }
         println!("{}", serde_json::to_string_pretty(&results)?);
         return Ok(());
@@ -38,6 +40,6 @@ async fn main() -> anyhow::Result<()> {
     loop {
         app.run_pass().await;
         terminal.draw(|f| ui::draw(f, &app))?;
-        std::thread::sleep(std::time::Duration::from_secs_f64(cli.interval));
+        tokio::time::sleep(std::time::Duration::from_secs_f64(cli.interval)).await;
     }
 }
